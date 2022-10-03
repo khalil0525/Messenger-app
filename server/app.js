@@ -19,10 +19,10 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(express.static(join(__dirname, "public")));
 
-app.use(express.static(join(__dirname, "../client/build")));
+app.use(express.static(join(__dirname, "/client/build")));
 // Anything that doesn't match the above, send back index.html
 app.get("*", (req, res) => {
-  res.sendFile(join(__dirname + "../client/build/index.html"));
+  res.sendFile(join(__dirname + "/client/build/index.html"));
 });
 
 app.use(function (req, res, next) {
