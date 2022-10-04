@@ -11,7 +11,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: "center",
   },
   bgBox: {
-    display: "flex",
+    [theme.breakpoints.down("xs")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "flex",
+    },
+
     minHeight: "100vh",
     alignItems: "center",
     flexDirection: "column",
@@ -34,7 +40,7 @@ const Access = ({ WrappedComponent }) => {
   const classes = useStyles();
   return (
     <Grid container className={classes.root}>
-      <Grid item sm={4} md={7} className={classes.bgGrid}>
+      <Grid item xs={false} sm={4} md={7} className={classes.bgGrid}>
         <Box className={classes.bgBox}>
           <img
             width="67"
@@ -46,7 +52,7 @@ const Access = ({ WrappedComponent }) => {
           </Typography>
         </Box>
       </Grid>
-      <Grid item xs={1} sm={8} md={5} elevation6>
+      <Grid item xs={12} sm={8} md={5}>
         {WrappedComponent}
       </Grid>
     </Grid>
