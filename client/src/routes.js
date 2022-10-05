@@ -17,7 +17,10 @@ const Routes = (props) => {
 
   const login = async (credentials) => {
     try {
-      const { data } = await axios.post("/auth/login", credentials);
+      const { data } = await axios.post(
+        "https://kc-chat-app-api.herokuapp.com/auth/login",
+        credentials
+      );
       await localStorage.setItem("messenger-token", data.token);
       setUser(data);
       socket.emit("go-online", data.id);
@@ -29,7 +32,10 @@ const Routes = (props) => {
 
   const register = async (credentials) => {
     try {
-      const { data } = await axios.post("/auth/register", credentials);
+      const { data } = await axios.post(
+        "https://kc-chat-app-api.herokuapp.com/auth/register",
+        credentials
+      );
       await localStorage.setItem("messenger-token", data.token);
       setUser(data);
       socket.emit("go-online", data.id);
@@ -41,7 +47,7 @@ const Routes = (props) => {
 
   const logout = async (id) => {
     try {
-      await axios.delete("/auth/logout");
+      await axios.delete("https://kc-chat-app-api.herokuapp.com/auth/logout");
       await localStorage.removeItem("messenger-token");
       setUser({});
       socket.emit("logout", id);
@@ -56,7 +62,9 @@ const Routes = (props) => {
     const fetchUser = async () => {
       setUser((prev) => ({ ...prev, isFetching: true }));
       try {
-        const { data } = await axios.get("/auth/user");
+        const { data } = await axios.get(
+          "https://kc-chat-app-api.herokuapp.com/auth/user"
+        );
         setUser(data);
         if (data.id) {
           socket.emit("go-online", data.id);
