@@ -50,11 +50,16 @@ const Home = ({ user, logout }) => {
   };
 
   const saveMessage = async (body) => {
-    const { data } = await axios.post("/api/messages", body);
+    const { data } = await axios.post(
+      "https://kc-chat-app-api.herokuapp.com/api/messages",
+      body
+    );
     return data;
   };
   const saveMessageRead = async (senderId) => {
-    const { data } = await axios.patch(`/api/messages/read/${senderId}`);
+    const { data } = await axios.patch(
+      `https://kc-chat-app-api.herokuapp.com/api/messages/read/${senderId}`
+    );
     return data;
   };
 
@@ -236,7 +241,9 @@ const Home = ({ user, logout }) => {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        const { data } = await axios.get("/api/conversations");
+        const { data } = await axios.get(
+          "https://kc-chat-app-api.herokuapp.com/api/conversations"
+        );
         setConversations(data);
       } catch (error) {
         console.error(error);
