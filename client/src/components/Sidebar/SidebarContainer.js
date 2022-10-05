@@ -13,7 +13,9 @@ const SidebarContainer = ({
 
   const searchUsers = async (searchTerm) => {
     try {
-      const { data } = await axios.get(`/api/users/${searchTerm}`);
+      const { data } = await axios.get(
+        `https://kc-chat-app-api.herokuapp.com/api/users/${searchTerm}`
+      );
       addSearchedUsers(data);
     } catch (error) {
       console.error(error);
