@@ -29,9 +29,10 @@ jobs:
           cd server
           npm ci
 
-      - name: Set AWS Region
+      - name: Create AWS Configuration
         run: |
-          echo "[default]" >> $HOME/.aws/config
+          mkdir $HOME/.aws
+          echo "[default]" > $HOME/.aws/config
           echo "region = us-east-1" >> $HOME/.aws/config
 
       - name: Deploy to Elastic Beanstalk
