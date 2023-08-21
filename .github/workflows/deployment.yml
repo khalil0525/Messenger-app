@@ -1,33 +1,52 @@
-name: EB Deploy
+name: Deploy to AWS Elastic Beanstalk
+
 on:
   push:
     branches:
-      - master
+      - main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          python-version: 3.9
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install awsebcli
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "16"
-      - name: Deploy to Elastic Beanstalk
+          node-version: "14"
+
+      - name: Install dependencies and build React app
         run: |
           cd client
-          npm i
+          npm ci
           npm run build
 
-          cd ..
-          eb deploy
+      - name: Install backend dependencies
+        run: |
+          cd server
+          npm ci
+
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          pip install awscli --upgrade --user
+          export PATH=$PATH:$HOME/.local/bin
+
+          # Create application version
+          aws elasticbeanstalk create-application-version \
+            --application-name Messenger App \
+            --version-label $GITHUB_SHA \
+            --source-bundle S3Bucket=elasticbeanstalk-us-east-1-430567120029,S3Key=$GITHUB_SHA.zip
+
+          # Update environment with the new version
+          aws elasticbeanstalk update-environment \
+            --environment-name MessengerApp-env \
+            --version-label $GITHUB_SHA
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          OTHER_BACKEND_ENV_VAR: ${{ secrets.OTHER_BACKEND_ENV_VAR }}
