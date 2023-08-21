@@ -42,7 +42,7 @@ jobs:
 
           # Create application version
           aws elasticbeanstalk create-application-version \
-            --application-name Messenger_App \
+            --application-name "Messenger App" \
             --version-label $GITHUB_SHA \
             --source-bundle S3Bucket=elasticbeanstalk-us-east-1-430567120029,S3Key=$GITHUB_SHA.zip
            
@@ -56,4 +56,3 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          OTHER_BACKEND_ENV_VAR: ${{ secrets.OTHER_BACKEND_ENV_VAR }}
