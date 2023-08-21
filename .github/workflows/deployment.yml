@@ -44,7 +44,7 @@ jobs:
           aws elasticbeanstalk update-environment \
             --environment-name MessengerApp-env \
             --version-label $GITHUB_SHA
-            --region us-east-1
+            --region us-east-1 \
 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
