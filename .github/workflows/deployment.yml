@@ -39,12 +39,13 @@ jobs:
             --application-name Messenger_App \
             --version-label $GITHUB_SHA \
             --source-bundle S3Bucket=elasticbeanstalk-us-east-1-430567120029,S3Key=$GITHUB_SHA.zip
-
+            --region us-east-1 
+            
           # Update environment with the new version
           aws elasticbeanstalk update-environment \
             --environment-name MessengerApp-env \
             --version-label $GITHUB_SHA
-            --region us-east-1 \
+            --region us-east-1
 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
