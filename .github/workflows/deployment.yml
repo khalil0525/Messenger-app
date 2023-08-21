@@ -28,6 +28,6 @@ jobs:
           cd client
           npm i
           npm run build
-          mv dist ..
+
           cd ..
           eb deploy
