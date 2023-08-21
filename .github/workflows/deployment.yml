@@ -31,12 +31,9 @@ jobs:
 
       - name: Configure AWS Credentials
         run: |
-          mkdir $HOME/.aws
-          echo "[default]" > $HOME/.aws/config
-          echo "region = us-east-1" >> $HOME/.aws/config
-          echo "[default]" > $HOME/.aws/credentials
-          echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> $HOME/.aws/credentials
-          echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> $HOME/.aws/credentials
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region us-east-1
 
       - name: Generate and Upload ZIP File to S3
         run: |
@@ -61,6 +58,4 @@ jobs:
             --version-label $GITHUB_SHA
 
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
