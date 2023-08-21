@@ -35,6 +35,12 @@ jobs:
           echo "[default]" > $HOME/.aws/config
           echo "region = us-east-1" >> $HOME/.aws/config
 
+      - name: Generate and Upload ZIP File to S3
+        run: |
+          zip -r my-app-build.zip client/build
+          aws s3 cp my-app-build.zip s3://elasticbeanstalk-us-east-1-430567120029/$GITHUB_SHA.zip
+          rm my-app-build.zip
+
       - name: Deploy to Elastic Beanstalk
         run: |
           pip install awscli --upgrade --user
@@ -45,7 +51,6 @@ jobs:
             --application-name "Messenger App" \
             --version-label $GITHUB_SHA \
             --source-bundle S3Bucket=elasticbeanstalk-us-east-1-430567120029,S3Key=$GITHUB_SHA.zip
-           
             
           # Update environment with the new version
           aws elasticbeanstalk update-environment \
