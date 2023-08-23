@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 require("dotenv").config();
 
 const db =
-  process.env === "development"
+  process.env.ENV === "production"
     ? new Sequelize({
         database: process.env.DB_DATABASE,
         username: process.env.DB_USER,
