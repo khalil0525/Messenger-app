@@ -35,7 +35,7 @@ jobs:
           ssh my-vps "mv /tmp/messenger-app/* /var/www"
 
       - name: Start Docker
-        run: ssh my-vps "cd /var/www && docker-compose exec -T app env \
+        run: ssh my-vps "cd /var/www && sudo docker-compose exec -T app env \
           NODEMAILER_EMAIL=${{ secrets.NODEMAILER_EMAIL }} \
           NODEMAILER_PASS=${{ secrets.NODEMAILER_PASS }} \
           DB_DATABASE=${{ secrets.DB_NAME }} \
