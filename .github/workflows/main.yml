@@ -1,0 +1,25 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region us-east-1
+
+     
+      - name: SSH into EC2 and Start Docker Container
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@54.224.72.128  "cd /var/www && git clone https://github.com/khalil0525/Messenger-app.git . && docker-compose up -d"
