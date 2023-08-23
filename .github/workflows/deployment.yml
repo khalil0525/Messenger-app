@@ -36,7 +36,7 @@ jobs:
 
       - name: SSH into EC2 and Start Application
         run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@54.224.72.128 "cd /var/www && npm install && node app/server.js"
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@54.224.72.128 "cd /var/www && npm install && NODEMAILER_EMAIL=${{ secrets.NODEMAILER_EMAIL }} NODEMAILER_PASS=${{ secrets.NODEMAILER_PASS }} DB_DATABASE=${{ secrets.DB_DATABASE }} DB_USER=${{ secrets.DB_USER }} DB_PASSWORD=${{ secrets.DB_PASSWORD }} DB_HOST=${{ secrets.DB_HOST }} DB_PORT=${{ secrets.DB_PORT }} APP_URL=${{ secrets.APP_URL }} SESSION_SECRET=${{ secrets.SESSION_SECRET }} PORT=${{ secrets.PORT }} ENV=${{ secrets.ENV }} node app/server.js"
 
       - name: Cleanup
         run: |
