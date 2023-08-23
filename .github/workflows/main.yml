@@ -23,22 +23,7 @@ jobs:
             StrictHostKeyChecking no
           END
 
-      - name: Start Docker Daemon
-        run: ssh my-vps "sudo systemctl start docker"
-
-      - name: Remove existing files
-        run: ssh my-vps "rm -rf /var/www/*"
-
-      - name: Stop and Remove Existing Docker Container
-        run: |
-          ssh my-vps "cd /var/www && sudo docker-compose down"
-
-      - name: Clone repository
-        run: |
-          ssh my-vps "if [ ! -d /var/www/messenger-app ]; then git clone https://github.com/khalil0525/Messenger-app.git /var/www/messenger-app; fi"
-          ssh my-vps "mv /var/www/messenger-app/* /var/www"
-
-      - name: Start Docker
+      - name: Set environment variables
         run: |
           ssh my-vps "cd /var/www/messenger-app && export NODEMAILER_EMAIL=${{ secrets.NODEMAILER_EMAIL }} \
           NODEMAILER_PASS=${{ secrets.NODEMAILER_PASS }} \
@@ -51,4 +36,4 @@ jobs:
           PORT=${{ secrets.PORT }}"
 
       - name: Deploy site
-        run: ssh my-vps '/var/www/redeploy-site.sh'
+        run: ssh my-vps '/var/www/redeploy.sh'
