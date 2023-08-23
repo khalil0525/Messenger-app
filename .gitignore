@@ -23,5 +23,5 @@ server/.env
 client/cypress/videos
 client/cypress/screenshots
 client/Dockerfile
-docker-compose.yml
+
 server/Dockerfile
