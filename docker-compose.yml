@@ -6,16 +6,15 @@ services:
       dockerfile: Dockerfile
     working_dir: /app
     environment:
-      NODEMAILER_EMAIL: ${NODEMAILER_EMAIL}
-      NODEMAILER_PASS: ${NODEMAILER_PASS}
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      APP_URL: ${APP_URL}
-      SESSION_SECRET: ${SESSION_SECRET}
-      PORT: ${PORT}
-      ENV: ${ENV}
+      NODEMAILER_EMAIL: $NODEMAILER_EMAIL
+      NODEMAILER_PASS: $NODEMAILER_PASS
+      DB_DATABASE: $DB_NAME
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASSWORD
+      DB_HOST: $DB_HOST
+      DB_PORT: $DB_PORT
+      SESSION_SECRET: $SESSION_SECRET
+      PORT: $PORT
+      ENV: $ENV
     ports:
-      - "3000:3000"
+      - "5000:5000"
