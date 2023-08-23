@@ -29,6 +29,10 @@ jobs:
       - name: Remove existing files
         run: ssh my-vps "rm -rf /var/www/*"
 
+      - name: Stop and Remove Existing Docker Container
+        run: |
+          ssh my-vps "cd /var/www && sudo docker-compose down"
+
       - name: Clone repository
         run: |
           ssh my-vps "rm -rf /tmp/messenger-app && git clone https://github.com/khalil0525/Messenger-app.git /tmp/messenger-app"
@@ -45,4 +49,3 @@ jobs:
           DB_PORT=${{ secrets.DB_PORT }} \
           SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
           PORT=${{ secrets.PORT }} \
-          ENV=${{ secrets.ENV }} && sudo docker-compose up -d"
