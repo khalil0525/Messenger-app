@@ -35,12 +35,12 @@ jobs:
 
       - name: Clone repository
         run: |
-          ssh my-vps "rm -rf /tmp/messenger-app && git clone https://github.com/khalil0525/Messenger-app.git /tmp/messenger-app"
-          ssh my-vps "mv /tmp/messenger-app/* /var/www"
+          ssh my-vps "if [ ! -d /var/www/messenger-app ]; then git clone https://github.com/khalil0525/Messenger-app.git /var/www/messenger-app; fi"
+          ssh my-vps "mv /var/www/messenger-app/* /var/www"
 
       - name: Start Docker
         run: |
-          ssh my-vps "cd /var/www && export NODEMAILER_EMAIL=${{ secrets.NODEMAILER_EMAIL }} \
+          ssh my-vps "cd /var/www/messenger-app && export NODEMAILER_EMAIL=${{ secrets.NODEMAILER_EMAIL }} \
           NODEMAILER_PASS=${{ secrets.NODEMAILER_PASS }} \
           DB_NAME=${{ secrets.DB_NAME }} \
           DB_USER=${{ secrets.DB_USER }} \
@@ -48,4 +48,7 @@ jobs:
           DB_HOST=${{ secrets.DB_HOST }} \
           DB_PORT=${{ secrets.DB_PORT }} \
           SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
-          PORT=${{ secrets.PORT }} \
+          PORT=${{ secrets.PORT }}"
+
+      - name: Deploy site
+        run: ssh my-vps '/var/www/redeploy-site.sh'
