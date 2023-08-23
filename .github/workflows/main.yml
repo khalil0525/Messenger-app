@@ -23,6 +23,9 @@ jobs:
             StrictHostKeyChecking no
           END
 
+      - name: Start Docker Daemon
+        run: ssh my-vps "sudo systemctl start docker"
+
       - name: Remove existing files
         run: ssh my-vps "rm -rf /var/www/*"
 
