@@ -35,4 +35,4 @@ jobs:
           ssh my-vps "mv /tmp/messenger-app/* /var/www"
 
       - name: Start Docker
-        run: ssh my-vps "cd /var/www && docker-compose up -d"
+        run: ssh my-vps "cd /var/www && sudo docker-compose up -d"
