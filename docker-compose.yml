@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    working_dir: /app
+    working_dir: /app/server # Set the working directory to /app/server
     environment:
       NODEMAILER_EMAIL: $NODEMAILER_EMAIL
       NODEMAILER_PASS: $NODEMAILER_PASS
@@ -17,4 +17,4 @@ services:
       PORT: $PORT
       ENV: $ENV
     ports:
-      - "5000:5000"
+      - "5000:80" # Expose the correct port
