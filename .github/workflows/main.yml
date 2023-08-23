@@ -26,6 +26,10 @@ jobs:
       - name: Remove existing files
         run: ssh my-vps "rm -rf /var/www/*"
 
-      - name: Clone repository and start Docker
+      - name: Clone repository
         run: |
-          ssh my-vps "cd /var/www && git clone https://github.com/khalil0525/Messenger-app.git . && docker-compose up -d"
+          ssh my-vps "git clone https://github.com/khalil0525/Messenger-app.git /tmp/messenger-app"
+          ssh my-vps "mv /tmp/messenger-app/* /var/www"
+
+      - name: Start Docker
+        run: ssh my-vps "cd /var/www && docker-compose up -d"
