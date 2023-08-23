@@ -10,7 +10,7 @@
     "debug": "nodemon  --inspect ./bin/www",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
     "seed": "node db/seed.js",
-    "start": "node .server/bin/www"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "connect-session-sequelize": "^7.0.4",
