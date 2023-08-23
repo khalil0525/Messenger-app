@@ -1,5 +1,5 @@
 #!/bin/bash
-cd project-pr-heroes
+cd messenger-app
 git fetch
 git reset origin/main --hard
 docker compose -f docker-compose.prod.yml down
