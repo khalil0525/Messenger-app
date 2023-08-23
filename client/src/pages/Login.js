@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import {
   Grid,
@@ -8,6 +8,7 @@ import {
   FormControl,
   TextField,
   makeStyles,
+  Link as MUILink,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
-    [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",
-    },
   },
   contentContainer: {
     display: "flex",
@@ -61,11 +59,20 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "600",
     paddingBottom: "20px",
   },
+  forgotPasswordLink: {
+    marginTop: theme.spacing(2),
+    color: theme.palette.primary.main,
+    textDecoration: "none", // Remove underline
+    "&:hover": {
+      textDecoration: "underline", // Add underline on hover
+    },
+  },
 }));
 
 const Login = ({ user, login }) => {
   const history = useHistory();
   const classes = useStyles();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // New state for button disabling
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -74,11 +81,22 @@ const Login = ({ user, login }) => {
     const username = formElements.username.value;
     const password = formElements.password.value;
 
-    await login({ username, password });
+    setIsButtonDisabled(true); // Disable the button while waiting for the response
+
+    try {
+      await login({ username, password });
+    } catch (error) {
+      // Handle the error, if needed
+    } finally {
+      setIsButtonDisabled(false); // Enable the button after the API response
+    }
   };
+  useEffect(() => {
+    if (user && user.id && user.active) history.push("/home");
+  }, [user, history]);
 
   useEffect(() => {
-    if (user && user.id) history.push("/home");
+    if (user && user.id && !user.active) history.push("/");
   }, [user, history]);
 
   return (
@@ -97,35 +115,60 @@ const Login = ({ user, login }) => {
           </Box>
         </Box>
         <Box className={classes.contentContainer}>
-          <Grid container justifyContent="center" direction="column">
-            <Typography variant="body1" className={classes.welcomeText}>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            className={classes.formBox}
+          >
+            <Typography variant="h4" className={classes.welcomeText}>
               Welcome Back!
             </Typography>
 
-            <form onSubmit={handleLogin}>
-              <Grid>
-                <Grid>
-                  <FormControl margin="normal" required>
+            <form onSubmit={handleLogin} className={classes.form}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <FormControl margin="normal" required fullWidth>
                     <TextField
                       aria-label="username"
                       label="Username"
                       name="username"
                       type="text"
+                      variant="outlined"
                     />
                   </FormControl>
                 </Grid>
-                <FormControl margin="normal" required>
-                  <TextField
-                    label="password"
-                    aria-label="password"
-                    type="password"
-                    name="password"
-                  />
-                </FormControl>
-                <Grid>
-                  <Button type="submit" variant="contained" size="large">
+                <Grid item xs={12}>
+                  <FormControl margin="normal" required fullWidth>
+                    <TextField
+                      label="Password"
+                      aria-label="password"
+                      type="password"
+                      name="password"
+                      variant="outlined"
+                    />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    disabled={isButtonDisabled}
+                    fullWidth
+                  >
                     Login
                   </Button>
+                </Grid>
+                <Grid item xs={12}>
+                  <MUILink
+                    component={Link}
+                    to="/password-recovery"
+                    className={classes.forgotPasswordLink}
+                  >
+                    Forgot your password?
+                  </MUILink>
                 </Grid>
               </Grid>
             </form>

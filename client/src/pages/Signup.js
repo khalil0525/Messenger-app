@@ -32,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
-    [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",
-    },
   },
   contentContainer: {
     display: "flex",
@@ -86,33 +83,42 @@ const Signup = ({ user, register }) => {
   };
 
   useEffect(() => {
-    if (user && user.id) history.push("/home");
+    if (user && user.id && user.active) history.push("/home");
+  }, [user, history]);
+
+  useEffect(() => {
+    if (user && user.id && !user.active) history.push("/");
   }, [user, history]);
 
   return (
     <Grid container justifyContent="center" className={classes.root}>
       <Box>
-        <Box container item className={classes.headerContainer}>
+        <Box container className={classes.headerContainer}>
           <Box className={classes.headerInner}>
             <Box className={classes.headerContent}>
               <Typography variant="body1" className={classes.text}>
                 Need to log in?
               </Typography>
-              <Link href="/login" to="/login">
-                <Button>Login</Button>
-              </Link>
+              <Button component={Link} to="/login">
+                Login
+              </Button>
             </Box>
           </Box>
         </Box>
         <Box className={classes.contentContainer}>
-          <Grid container justifyContent="center" direction="column">
-            <Typography variant="body1" className={classes.welcomeText}>
-              Welcome Back!
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            className={classes.formBox}
+          >
+            <Typography variant="h4" className={classes.welcomeText}>
+              Register your account
             </Typography>
-            <form onSubmit={handleRegister}>
-              <Grid>
-                <Grid>
-                  <FormControl>
+            <form onSubmit={handleRegister} className={classes.form}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
                     <TextField
                       aria-label="username"
                       label="Username"
@@ -122,8 +128,8 @@ const Signup = ({ user, register }) => {
                     />
                   </FormControl>
                 </Grid>
-                <Grid>
-                  <FormControl>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
                     <TextField
                       label="E-mail address"
                       aria-label="e-mail address"
@@ -133,8 +139,11 @@ const Signup = ({ user, register }) => {
                     />
                   </FormControl>
                 </Grid>
-                <Grid>
-                  <FormControl error={!!formErrorMessage.confirmPassword}>
+                <Grid item xs={12}>
+                  <FormControl
+                    error={!!formErrorMessage.confirmPassword}
+                    fullWidth
+                  >
                     <TextField
                       aria-label="password"
                       label="Password"
@@ -148,8 +157,11 @@ const Signup = ({ user, register }) => {
                     </FormHelperText>
                   </FormControl>
                 </Grid>
-                <Grid>
-                  <FormControl error={!!formErrorMessage.confirmPassword}>
+                <Grid item xs={12}>
+                  <FormControl
+                    error={!!formErrorMessage.confirmPassword}
+                    fullWidth
+                  >
                     <TextField
                       label="Confirm Password"
                       aria-label="confirm password"
@@ -163,9 +175,17 @@ const Signup = ({ user, register }) => {
                     </FormHelperText>
                   </FormControl>
                 </Grid>
-                <Button type="submit" variant="contained" size="large">
-                  Create
-                </Button>
+                <Grid item xs={12}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    fullWidth
+                  >
+                    Create
+                  </Button>
+                </Grid>
               </Grid>
             </form>
           </Grid>

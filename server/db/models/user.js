@@ -16,6 +16,10 @@ const User = db.define("user", {
       isEmail: true,
     },
   },
+  active: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
   photoUrl: {
     type: Sequelize.STRING,
   },

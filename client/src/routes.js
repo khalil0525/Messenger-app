@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Route, Switch, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter, Redirect } from "react-router-dom";
+
 import Access from "./Access.js";
-import Signup from "./Signup.js";
-import Login from "./Login.js";
-import { SnackbarError, Home } from "./components";
+import Signup from "./pages/Signup.js";
+import Login from "./pages/Login.js";
+import ChangePassword from "./pages/ChangePassword.js";
+import EmailVerification from "./pages/EmailVerification.js";
+import RecoverPassword from "./pages/RecoverPassword.js";
+import { SnackBarMessage, Home } from "./components";
 import { SocketContext, socket } from "./context/socket";
+import Verify from "./pages/Verify.js";
 
 const Routes = (props) => {
   const [user, setUser] = useState({
     isFetching: true,
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
   const login = async (credentials) => {
     try {
       const { data } = await axios.post(
-        "https://kc-chat-app-api.herokuapp.com/auth/login",
+        "http://localhost:5000/auth/login",
         credentials
       );
       await localStorage.setItem("messenger-token", data.token);
@@ -33,9 +39,10 @@ const Routes = (props) => {
   const register = async (credentials) => {
     try {
       const { data } = await axios.post(
-        "https://kc-chat-app-api.herokuapp.com/auth/register",
+        "http://localhost:5000/auth/register",
         credentials
       );
+
       await localStorage.setItem("messenger-token", data.token);
       setUser(data);
       socket.emit("go-online", data.id);
@@ -45,9 +52,69 @@ const Routes = (props) => {
     }
   };
 
+  const recoverPassword = async (email) => {
+    try {
+      await axios.post("http://localhost:5000/auth/password/recover", {
+        email,
+      });
+
+      setMessage("Recovery email sent!");
+
+      setIsError(false);
+      setSnackBarOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const recoveryChangePassword = async (token, password) => {
+    try {
+      await axios.post(`http://localhost:5000/auth/password/set/${token}`, {
+        newPassword: password,
+      });
+      setMessage("Password changed successfully");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const resendVerification = async (user) => {
+    try {
+      const { data } = await axios.post(
+        `http://localhost:5000/auth/verify/resend`,
+        { user }
+      );
+      console.log(data);
+
+      setMessage("Verification resent!");
+
+      setIsError(false);
+      setSnackBarOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const checkVerification = async (token) => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:5000/auth/verify?token=${token}`
+      );
+      await localStorage.setItem("messenger-token", data.token);
+      setUser(data);
+      setMessage("Email verified successfully!");
+      setIsError(false);
+      setSnackBarOpen(true);
+    } catch (error) {
+      console.error(error);
+      setMessage("Email verification failed. Please try again.");
+      setIsError(true);
+      setSnackBarOpen(true);
+    }
+  };
   const logout = async (id) => {
     try {
-      await axios.delete("https://kc-chat-app-api.herokuapp.com/auth/logout");
+      await axios.delete("http://localhost:5000/auth/logout");
       await localStorage.removeItem("messenger-token");
       setUser({});
       socket.emit("logout", id);
@@ -62,9 +129,7 @@ const Routes = (props) => {
     const fetchUser = async () => {
       setUser((prev) => ({ ...prev, isFetching: true }));
       try {
-        const { data } = await axios.get(
-          "https://kc-chat-app-api.herokuapp.com/auth/user"
-        );
+        const { data } = await axios.get("http://localhost:5000/auth/user");
         setUser(data);
         if (data.id) {
           socket.emit("go-online", data.id);
@@ -83,10 +148,11 @@ const Routes = (props) => {
     if (user?.error) {
       // check to make sure error is what we expect, in case we get an unexpected server error object
       if (typeof user.error === "string") {
-        setErrorMessage(user.error);
+        setMessage(user.error);
       } else {
-        setErrorMessage("Internal Server Error. Please try again");
+        setMessage("Internal Server Error. Please try again");
       }
+      setIsError(true);
       setSnackBarOpen(true);
     }
   }, [user?.error]);
@@ -94,16 +160,18 @@ const Routes = (props) => {
   if (user?.isFetching) {
     return <div>Loading...</div>;
   }
-
+  console.log(user);
   return (
     <SocketContext.Provider value={socket}>
       {snackBarOpen && (
-        <SnackbarError
+        <SnackBarMessage // Updated component name
           setSnackBarOpen={setSnackBarOpen}
-          errorMessage={errorMessage}
+          message={message}
           snackBarOpen={snackBarOpen}
+          isError={isError} // Set this based on whether it's an error message
         />
       )}
+
       <Switch>
         <Route
           path="/login"
@@ -111,6 +179,7 @@ const Routes = (props) => {
             <Access WrappedComponent={<Login user={user} login={login} />} />
           )}
         />
+
         <Route
           path="/register"
           render={() => (
@@ -120,15 +189,55 @@ const Routes = (props) => {
           )}
         />
         <Route
+          path="/verify"
+          render={() =>
+            user && user?.id && !user?.active ? (
+              <Verify checkVerification={checkVerification} />
+            ) : (
+              <Redirect to="/" />
+            )
+          }
+        />
+
+        <Route
+          path="/password-recovery"
+          render={() =>
+            user?.id && user?.active ? (
+              <Redirect to="/home" />
+            ) : (
+              <Access
+                WrappedComponent={
+                  <RecoverPassword recoverPassword={recoverPassword} />
+                }
+              />
+            )
+          }
+        />
+        <Route
+          path="/change-password"
+          render={() => (
+            <ChangePassword recoveryChangePassword={recoveryChangePassword} />
+          )}
+        />
+        <Route
           exact
           path="/"
           render={(props) =>
             user?.id ? (
-              <Home user={user} logout={logout} />
+              user?.active ? (
+                <Home user={user} logout={logout} />
+              ) : (
+                <Access
+                  WrappedComponent={
+                    <EmailVerification
+                      user={user}
+                      resendVerification={resendVerification}
+                    />
+                  }
+                />
+              )
             ) : (
-              <Access
-                WrappedComponent={<Signup user={user} register={register} />}
-              />
+              <Access WrappedComponent={<Login user={user} login={login} />} />
             )
           }
         />

@@ -22,7 +22,7 @@ app.use(
     origin: "*",
   })
 );
-app.use(express.static(path.join(__dirname, "../client/build")));
+// app.use(express.static(path.join(__dirname, "../client/build")));
 app.use(logger("dev"));
 app.use(json());
 app.use(urlencoded({ extended: false }));
@@ -52,9 +52,9 @@ app.use("/auth", require("./routes/auth"));
 app.use("/api", require("./routes/api"));
 
 // AFTER defining routes: Anything that doesn't match what's above, send back index.html; (the beginning slash ('/') in the string is important!)
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/../client/build/index.html"));
-});
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname + "/../client/build/index.html"));
+// });
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
