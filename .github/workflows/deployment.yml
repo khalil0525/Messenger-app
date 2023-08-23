@@ -1,4 +1,4 @@
-name: Deploy to AWS Elastic Beanstalk
+name: Deploy to EC2
 
 on:
   push:
@@ -24,38 +24,20 @@ jobs:
           npm ci
           npm run build
 
-      - name: Install backend dependencies
-        run: |
-
-          npm ci
-
       - name: Configure AWS Credentials
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set region us-east-1
 
-      - name: Generate and Upload ZIP File to S3
+      - name: Copy Build Artifacts to EC2
         run: |
-          zip -r my-app-build.zip client/build
-          aws s3 cp my-app-build.zip s3://elasticbeanstalk-us-east-1-430567120029/$GITHUB_SHA.zip
-          rm my-app-build.zip
+          scp -i ${{ secrets.SSH_PRIVATE_KEY }} -r client/build ec2-user@54.224.72.128:/var/www
 
-      - name: Deploy to Elastic Beanstalk
+      - name: SSH into EC2 and Start Application
         run: |
-          pip install awscli --upgrade --user
-          export PATH=$PATH:$HOME/.local/bin
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@54.224.72.128 "cd /var/www && npm install && node app/server.js"
 
-          # Create application version
-          aws elasticbeanstalk create-application-version \
-            --application-name "Messenger App" \
-            --version-label $GITHUB_SHA \
-            --source-bundle S3Bucket=elasticbeanstalk-us-east-1-430567120029,S3Key=$GITHUB_SHA.zip
-            
-          # Update environment with the new version
-          aws elasticbeanstalk update-environment \
-            --environment-name MessengerApp-env \
-            --version-label $GITHUB_SHA
-
-        env:
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+      - name: Cleanup
+        run: |
+          rm -rf client/build
