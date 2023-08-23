@@ -31,7 +31,7 @@ jobs:
 
       - name: Clone repository
         run: |
-          ssh my-vps "git clone https://github.com/khalil0525/Messenger-app.git /tmp/messenger-app"
+          ssh my-vps "rm -rf /tmp/messenger-app && git clone https://github.com/khalil0525/Messenger-app.git /tmp/messenger-app"
           ssh my-vps "mv /tmp/messenger-app/* /var/www"
 
       - name: Start Docker
