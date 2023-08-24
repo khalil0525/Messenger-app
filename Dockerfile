@@ -27,8 +27,8 @@ WORKDIR /app/server
 # Install server-specific dependencies
 RUN npm install
 
-# Expose the necessary ports
-EXPOSE 80
-
 # Set the startup command to "npm start"
 CMD ["npm", "start"]
+
+# Expose the necessary ports
+EXPOSE 5000

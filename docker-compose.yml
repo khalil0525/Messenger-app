@@ -17,4 +17,5 @@ services:
       PORT: $PORT
       ENV: $ENV
     ports:
-      - "5000:80" # Expose the correct port
+      - 80:80
+      - 443:443
