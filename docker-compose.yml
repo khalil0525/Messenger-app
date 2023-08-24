@@ -1,6 +1,7 @@
 version: "3"
 services:
   app:
+    container_name: app
     build:
       context: .
       dockerfile: Dockerfile
@@ -16,6 +17,12 @@ services:
       SESSION_SECRET: $SESSION_SECRET
       PORT: $PORT
       ENV: $ENV
+  nginx:
+    container_name: nginx
+    restart: always
     ports:
       - 80:80
-      - 443:443
+    volumes:
+      - ./user_conf.d:/etc/nginx/user_conf.d
+    depends_on:
+      - app
