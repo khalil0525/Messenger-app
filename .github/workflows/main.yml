@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Build client
+        run: |
+          cd client
+          npm install
+          npm run build
+
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/

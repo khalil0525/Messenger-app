@@ -5,8 +5,7 @@ node_modules/
 
 client/node_modules/
 
-# production
-/build/
+
 
 # misc
 .DS_Store
