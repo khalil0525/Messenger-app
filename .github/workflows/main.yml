@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Build and Deploy to EC2
 
 on:
   push:
@@ -6,16 +6,34 @@ on:
       - master
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Build client
         run: |
           cd client
           npm install
           npm run build
+        env:
+          CI: true
 
+      - name: Commit build to branch
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add client/build
+          git commit -m "Build client"
+          git push
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
