@@ -24,4 +24,4 @@ jobs:
           END
 
       - name: Deploy site
-        run: ssh my-vps 'cd /var/www/ ./redeploy.sh'
+        run: ssh my-vps 'cd /var/www/ && ./redeploy.sh'
