@@ -17,6 +17,7 @@ const { json, urlencoded } = express;
 
 const app = express();
 
+// CORS
 app.use(
   cors({
     origin: "*",

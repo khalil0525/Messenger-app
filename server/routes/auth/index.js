@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { User } = require("../../db/models");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const { upload } = require("../../app");
 require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
@@ -286,6 +287,8 @@ router.post("/password/set/:token", async (req, res, next) => {
   }
 });
 
-module.exports = router;
+// User profile changes
+
+// Add a route to handle updating user's photo
 
 module.exports = router;
