@@ -30,7 +30,7 @@ const server = http.createServer(app);
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: "*",
+    origin: "http://ec2-54-224-72-128.compute-1.amazonaws.com",
   },
 });
 
