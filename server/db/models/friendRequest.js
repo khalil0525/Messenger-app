@@ -22,4 +22,4 @@ const FriendRequest = db.define("friendRequest", {
   },
 });
 
-module.exports = Message;
+module.exports = FriendRequest;

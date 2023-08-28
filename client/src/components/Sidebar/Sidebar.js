@@ -5,16 +5,18 @@ import { Search, Chat, CurrentUser } from "./index";
 
 const useStyles = makeStyles(() => ({
 	root: {
-		paddingLeft: 21,
-		paddingRight: 21,
+		paddingLeft: 16,
+		paddingRight: 16,
 		flexGrow: 1,
+		backgroundColor: "rgba(8,10,25,255)",
 	},
 	title: {
-		fontSize: 20,
+		fontSize: 16,
 		letterSpacing: -0.29,
 		fontWeight: "bold",
 		marginTop: 32,
 		marginBottom: 15,
+		color: "rgba(255, 255, 255, 30%)",
 	},
 }));
 
@@ -31,8 +33,10 @@ const Sidebar = ({
 	return (
 		<Box className={classes.root}>
 			<CurrentUser user={user} handleLogout={handleLogout} />
-			<Typography className={classes.title}>Chats</Typography>
 			<Search handleChange={handleChange} />
+			<Typography className={classes.title}>PINNED</Typography>
+
+			<Typography className={classes.title}>DIRECT MESSAGES</Typography>
 			{conversations
 				.filter((conversation) =>
 					conversation.otherUser.username.includes(searchTerm)
@@ -46,6 +50,8 @@ const Sidebar = ({
 						/>
 					);
 				})}
+			<Typography className={classes.title}>GROUP MESSAGES</Typography>
+			<Typography className={classes.title}>FRIEND REQUESTS</Typography>
 		</Box>
 	);
 };

@@ -12,4 +12,4 @@ const Friend = db.define("friend", {
   },
 });
 
-module.exports = Message;
+module.exports = Friend;
