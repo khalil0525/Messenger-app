@@ -36,6 +36,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    env:
+      REACT_APP_API_URL: http://ec2-54-224-72-128.compute-1.amazonaws.com
     steps:
       - name: Configure SSH
         run: |

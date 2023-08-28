@@ -1,8 +1,7 @@
 import { io } from "socket.io-client";
 
 import React from "react";
-
-export const socket = io("http://ec2-54-224-72-128.compute-1.amazonaws.com");
+export const socket = io(process.env.REACT_APP_API_URL);
 socket.on("connect", () => {
 	console.log("connected to server");
 });
