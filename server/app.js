@@ -20,7 +20,7 @@ const app = express();
 // CORS
 app.use(
   cors({
-    origin: "http://ec2-54-224-72-128.compute-1.amazonaws.com",
+    origin: "*",
   })
 );
 app.use(express.static(path.join(__dirname, "../client/build")));
