@@ -59,7 +59,11 @@ router.post("/register", async (req, res, next) => {
       text: `Hi! There, You have recently visited 
                    our website and entered your email.
                    Please follow the given link to verify your email
-                   http://localhost:3000/verify?token=${token} 
+                   http://${
+                     process.env.env === "development"
+                       ? "localhost:5000"
+                       : "ec2-54-224-72-128.compute-1.amazonaws.com"
+                   }/verify?token=${token} 
                    Thanks`,
     };
 
