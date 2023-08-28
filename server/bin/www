@@ -48,6 +48,7 @@ io.on("connection", (socket) => {
       message: data.message,
       sender: data.sender,
     });
+    console.log("New Message");
   });
 
   socket.on("read-messages", (data) => {
