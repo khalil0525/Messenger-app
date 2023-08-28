@@ -8,7 +8,8 @@ const useStyles = makeStyles(() => ({
 		display: "flex",
 		flexGrow: 8,
 		flexDirection: "column",
-		borderLeft: "1px solid grey",
+		borderLeft: "4px solid rgba(49,51,65,255)",
+		backgroundColor: "rgba(8,28,26,255)",
 	},
 	chatContainer: {
 		marginLeft: 41,
@@ -70,6 +71,7 @@ const ActiveChat = ({
 									messages={conversation.messages}
 									otherUser={conversation.otherUser}
 									userId={user.id}
+									user={user}
 								/>
 								<Input
 									otherUser={conversation.otherUser}
