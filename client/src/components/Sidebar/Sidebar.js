@@ -7,8 +7,9 @@ const useStyles = makeStyles(() => ({
 	root: {
 		paddingLeft: 16,
 		paddingRight: 16,
-		flexGrow: 1,
+		flexGrow: 0,
 		backgroundColor: "rgba(8,10,25,255)",
+		overflowX: "hidden",
 	},
 	title: {
 		fontSize: 16,

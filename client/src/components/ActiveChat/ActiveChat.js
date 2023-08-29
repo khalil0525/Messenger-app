@@ -6,10 +6,11 @@ import { Input, Header, Messages } from "./index";
 const useStyles = makeStyles(() => ({
 	root: {
 		display: "flex",
-		flexGrow: 8,
+		flexGrow: 1,
 		flexDirection: "column",
 		borderLeft: "4px solid rgba(49,51,65,255)",
 		backgroundColor: "rgba(8,28,26,255)",
+		height: "100%",
 	},
 	chatContainer: {
 		marginLeft: 41,

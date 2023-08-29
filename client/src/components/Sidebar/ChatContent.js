@@ -7,7 +7,8 @@ const useStyles = makeStyles((theme) => ({
 		display: "flex",
 		justifyContent: "space-between",
 		marginLeft: 20,
-		flexGrow: 1,
+		flexGrow: 0,
+		overflowX: "hidden",
 	},
 	username: {
 		fontWeight: "bold",
@@ -19,6 +20,10 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: "300",
 		color: "rgb(255, 255, 255, 50%)",
 		letterSpacing: -0.17,
+		overflow: "hidden", // Hide overflowing text
+		whiteSpace: "nowrap", // Prevent line breaks
+		textOverflow: "ellipsis", // Show ellipsis when text overflows
+		maxWidth: "100%", // Ensure the text doesn't push the container beyond its bounds
 	},
 	boldPreviewText: {
 		color: "rgb(255, 255, 255, 50%)",
@@ -35,12 +40,17 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: "bold",
 	},
 }));
-
+const MAX_PREVIEW_LENGTH = 30;
 const ChatContent = ({ conversation }) => {
 	const classes = useStyles();
 
 	const { otherUser } = conversation;
 	const latestMessageText = conversation.id && conversation.latestMessageText;
+
+	const truncatedMessage =
+		latestMessageText.length > MAX_PREVIEW_LENGTH
+			? `${latestMessageText.substring(0, MAX_PREVIEW_LENGTH)}...`
+			: latestMessageText;
 
 	const hasUnreadMessages =
 		conversation.messages[conversation.messages.length - 1]?.senderId ===
@@ -66,7 +76,7 @@ const ChatContent = ({ conversation }) => {
 						classes.previewText
 					}`}
 				>
-					{latestMessageText}
+					{truncatedMessage}
 				</Typography>
 			</Box>
 			<Badge
