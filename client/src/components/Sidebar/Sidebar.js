@@ -25,6 +25,7 @@ const Sidebar = ({
 	handleChange,
 	searchTerm,
 	conversations = [],
+	pinnedConversations = [],
 	user,
 	setActiveChat,
 	handleLogout,
@@ -36,6 +37,19 @@ const Sidebar = ({
 			<CurrentUser user={user} handleLogout={handleLogout} />
 			<Search handleChange={handleChange} />
 			<Typography className={classes.title}>PINNED</Typography>
+			{conversations
+				.filter((conversation) =>
+					conversation.otherUser.username.includes(searchTerm)
+				)
+				.map((conversation) => {
+					return (
+						<Chat
+							conversation={conversation}
+							key={conversation.otherUser.username}
+							setActiveChat={setActiveChat}
+						/>
+					);
+				})}
 
 			<Typography className={classes.title}>DIRECT MESSAGES</Typography>
 			{conversations
