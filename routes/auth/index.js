@@ -62,7 +62,7 @@ router.post("/register", async (req, res, next) => {
                    http://${
                      process.env.env === "development"
                        ? "localhost:5000"
-                       : "ec2-54-224-72-128.compute-1.amazonaws.com"
+                       : "https://kc-messenger-app-6107c8ddc413.herokuapp.com"
                    }/verify?token=${token} 
                    Thanks`,
     };
@@ -156,7 +156,7 @@ router.post("/verify/resend", (req, res) => {
                  http://${
                    process.env.env === "development"
                      ? "localhost:5000"
-                     : "ec2-54-224-72-128.compute-1.amazonaws.com"
+                     : "https://kc-messenger-app-6107c8ddc413.herokuapp.com"
                  }/verify?token=${token} 
                  Thanks`,
   };
@@ -250,7 +250,7 @@ router.post("/password/recover", async (req, res) => {
              http://${
                process.env.env === "development"
                  ? "localhost:5000"
-                 : "ec2-54-224-72-128.compute-1.amazonaws.com"
+                 : "https://kc-messenger-app-6107c8ddc413.herokuapp.com"
              }/change-password?token=${token} 
              Thanks`,
     };
